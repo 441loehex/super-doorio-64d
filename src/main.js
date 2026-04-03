@@ -9,15 +9,22 @@ const ctx = canvas.getContext('2d');
 const hud = document.getElementById('hud');
 const startOverlay = document.getElementById('startOverlay');
 const messageEl = document.getElementById('message');
+if (!window.structuredClone) {
+  window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
+}
+if (!window.crypto?.randomUUID) {
+  window.crypto = window.crypto || {};
+  window.crypto.randomUUID = () => `e_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
+}
+if (!canvas.requestPointerLock) {
+  canvas.requestPointerLock = () => {};
+}
 
 const save = loadSave();
 const game = new Game(save);
 let input = new Input(save.keybinds);
 let paused = true;
 let last = performance.now();
-const requestPointerLockSafe = () => {
-  if (canvas.requestPointerLock) canvas.requestPointerLock();
-};
 
 function resize() {
   canvas.width = Math.floor(window.innerWidth);
@@ -28,7 +35,7 @@ resize();
 
 const menus = setupMenus({
   save,
-  onResume: () => { paused = false; menus.hidePause(); requestPointerLockSafe(); },
+  onResume: () => { paused = false; menus.hidePause(); canvas.requestPointerLock(); },
   onBackHub: () => { game.loadLevel('hub'); paused = false; menus.hidePause(); }
 });
 
@@ -58,7 +65,7 @@ requestAnimationFrame(frame);
 document.getElementById('startBtn').onclick = () => {
   paused = false;
   startOverlay.classList.remove('visible');
-  requestPointerLockSafe();
+  canvas.requestPointerLock();
 };
 
 document.getElementById('resetSaveBtn').onclick = () => {
@@ -70,6 +77,6 @@ window.addEventListener('keydown', (e) => {
   if (e.code === save.keybinds.pause) {
     paused = !paused;
     if (paused) menus.showPause();
-    else { menus.hidePause(); requestPointerLockSafe(); }
+    else { menus.hidePause(); canvas.requestPointerLock(); }
   }
 });
