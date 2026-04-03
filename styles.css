@@ -1,0 +1,20 @@
+:root {
+  --bg: #10131a;
+  --panel: #1f2638;
+  --text: #f0f7ff;
+  --accent: #ffcf40;
+  --danger: #ff6363;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: #000; color: var(--text); font-family: Arial, sans-serif; overflow: hidden; }
+#gameCanvas { width: 100vw; height: 100vh; display: block; image-rendering: pixelated; }
+.overlay { position: fixed; inset: 0; display: none; place-items: center; background: rgba(0,0,0,.75); z-index: 20; }
+.overlay.visible { display: grid; }
+.panel { background: var(--panel); border: 3px solid var(--accent); border-radius: 10px; width: min(640px, 94vw); padding: 18px; }
+button { display: block; width: 100%; padding: 10px; margin-top: 10px; border: 0; border-radius: 6px; font-weight: 700; background: var(--accent); cursor: pointer; }
+.hud { position: fixed; left: 0; right: 0; bottom: 0; display: flex; justify-content: space-between; background: rgba(10,16,28,.74); color: #fff; padding: 10px 14px; z-index: 5; border-top: 2px solid #fff; }
+.message { position: fixed; top: 18px; left: 50%; transform: translateX(-50%); background: rgba(0,0,0,.75); border: 2px solid #fff; border-radius: 6px; padding: 8px 14px; z-index: 30; opacity: 0; transition: opacity .2s; }
+.message.visible { opacity: 1; }
+label { display: block; margin-top: 12px; }
+input[type="range"] { width: 100%; }
+#keybinds button { width: auto; display: inline-block; margin-left: 10px; margin-top: 4px; }
