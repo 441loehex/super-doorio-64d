@@ -1,5 +1,6 @@
 import { castRays } from './engine/raycaster.js';
 import { Input } from './engine/input.js';
+import { applyBrowserCompat } from './engine/compat.js';
 import { Game } from './game/game.js';
 import { loadSave, writeSave, resetSave } from './game/save.js';
 import { renderHUD, setupMenus, renderWeaponList } from './ui/ui.js';
@@ -9,16 +10,7 @@ const ctx = canvas.getContext('2d');
 const hud = document.getElementById('hud');
 const startOverlay = document.getElementById('startOverlay');
 const messageEl = document.getElementById('message');
-if (!window.structuredClone) {
-  window.structuredClone = (value) => JSON.parse(JSON.stringify(value));
-}
-if (!window.crypto?.randomUUID) {
-  window.crypto = window.crypto || {};
-  window.crypto.randomUUID = () => `e_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
-}
-if (!canvas.requestPointerLock) {
-  canvas.requestPointerLock = () => {};
-}
+applyBrowserCompat(canvas);
 
 const save = loadSave();
 const game = new Game(save);
