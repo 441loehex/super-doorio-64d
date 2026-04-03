@@ -15,6 +15,9 @@ const game = new Game(save);
 let input = new Input(save.keybinds);
 let paused = true;
 let last = performance.now();
+const requestPointerLockSafe = () => {
+  if (canvas.requestPointerLock) canvas.requestPointerLock();
+};
 
 function resize() {
   canvas.width = Math.floor(window.innerWidth);
@@ -25,7 +28,7 @@ resize();
 
 const menus = setupMenus({
   save,
-  onResume: () => { paused = false; menus.hidePause(); canvas.requestPointerLock(); },
+  onResume: () => { paused = false; menus.hidePause(); requestPointerLockSafe(); },
   onBackHub: () => { game.loadLevel('hub'); paused = false; menus.hidePause(); }
 });
 
@@ -55,7 +58,7 @@ requestAnimationFrame(frame);
 document.getElementById('startBtn').onclick = () => {
   paused = false;
   startOverlay.classList.remove('visible');
-  if (canvas.requestPointerLock) canvas.requestPointerLock();
+  requestPointerLockSafe();
 };
 
 document.getElementById('resetSaveBtn').onclick = () => {
@@ -67,6 +70,6 @@ window.addEventListener('keydown', (e) => {
   if (e.code === save.keybinds.pause) {
     paused = !paused;
     if (paused) menus.showPause();
-    else { menus.hidePause(); if (canvas.requestPointerLock) canvas.requestPointerLock(); }
+    else { menus.hidePause(); requestPointerLockSafe(); }
   }
 });

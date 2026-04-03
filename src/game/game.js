@@ -2,11 +2,11 @@ import { HUB_LEVEL, LEVELS, BOSS_LEVEL, ALL_LEVEL_IDS, THEME_NAME_BY_LEVEL } fro
 import { ENEMY_TYPES, WEAPONS } from './defs.js';
 
 const rand = (a, b) => a + Math.random() * (b - a);
-const deepClone = (value) => {
+const cloneLevelData = (value) => {
   if (typeof structuredClone === 'function') return structuredClone(value);
   return JSON.parse(JSON.stringify(value));
 };
-const makeId = () => {
+const createEntityId = () => {
   if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
   return `e_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 9)}`;
 };
@@ -56,7 +56,7 @@ export class Game {
     this.boss = null;
 
     const level = id === 'hub' ? HUB_LEVEL : id === 'boss' ? BOSS_LEVEL : LEVELS.find((l) => l.id === id);
-    this.current = deepClone(level);
+    this.current = cloneLevelData(level);
     this.levelStartId = id;
     for (let y = 0; y < this.current.map.length; y++) {
       for (let x = 0; x < this.current.map[y].length; x++) {
@@ -89,7 +89,7 @@ export class Game {
     const mix = this.current.enemyMix || ['gobflare', 'blinkbat'];
     const typeId = ch === 'a' ? mix[0] : ch === 'b' ? mix[1] : mix[Math.floor(Math.random() * mix.length)];
     const type = ENEMY_TYPES[typeId];
-    this.enemies.push({ id: makeId(), typeId, x, y, hp: type.hp, maxHp: type.hp, cooldown: rand(0.1, 0.8), ...type });
+    this.enemies.push({ id: createEntityId(), typeId, x, y, hp: type.hp, maxHp: type.hp, cooldown: rand(0.1, 0.8), ...type });
   }
 
   flash(text, t = 2.6) { this.message = text; this.messageTimer = t; }
