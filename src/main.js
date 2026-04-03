@@ -1,6 +1,5 @@
 import { castRays } from './engine/raycaster.js';
 import { Input } from './engine/input.js';
-import { applyBrowserCompat } from './engine/compat.js';
 import { Game } from './game/game.js';
 import { loadSave, writeSave, resetSave } from './game/save.js';
 import { renderHUD, setupMenus, renderWeaponList } from './ui/ui.js';
@@ -10,7 +9,6 @@ const ctx = canvas.getContext('2d');
 const hud = document.getElementById('hud');
 const startOverlay = document.getElementById('startOverlay');
 const messageEl = document.getElementById('message');
-applyBrowserCompat(canvas);
 
 const save = loadSave();
 const game = new Game(save);
